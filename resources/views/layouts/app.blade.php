@@ -38,22 +38,38 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Produk</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('custom-order.form') }}">Custom Produk</a></li>
+
+                    {{-- Dropdown Produk --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="produkDropdown" role="button" data-bs-toggle="dropdown">
+                            Produk
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('products.index') }}">Produk</a></li>
+                            <li><a class="dropdown-item" href="{{ route('custom-order.form') }}">Custom Produk</a></li>
+                            <li><a class="dropdown-item" href="{{ route('gallery') }}">Galeri</a></li>
+                        </ul>
+                    </li>
+
                     <li class="nav-item"><a class="nav-link" href="{{ route('production') }}">Proses Produksi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('gallery') }}">Galeri</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">Tentang Kami</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('testimonials.index') }}">Testimoni</a></li>
 
                     @auth
                         @if(!auth()->user()->is_admin)
-                            {{-- ✅ Untuk User Biasa --}}
-                            <li class="nav-item"><a class="nav-link" href="{{ route('cart.index') }}">🛒 Keranjangku</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('orders.index') }}">📦 Belanjaanku</a></li>
+                            {{-- Dropdown Belanja --}}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="belanjaDropdown" role="button" data-bs-toggle="dropdown">
+                                    Belanja
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ route('cart.index') }}">Keranjangku</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('orders.index') }}">Belanjaanku</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('testimonials.index') }}">Testimoni</a></li>
+                                </ul>
+                            </li>
                         @endif
 
                         @if(auth()->user()->is_admin)
-                            {{-- ✅ Untuk Admin --}}
                             <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Admin</a></li>
                         @endif
 
@@ -157,7 +173,6 @@
     @auth
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Scroll to Top
             const btn = document.getElementById('scrollTopBtn');
             window.onscroll = () => {
                 btn.classList.toggle('d-none', window.scrollY < 200);
@@ -166,7 +181,6 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
-            // Notifikasi
             const notifBadge = document.getElementById("notif-badge");
             const notifDropdown = document.getElementById("notifDropdown");
 

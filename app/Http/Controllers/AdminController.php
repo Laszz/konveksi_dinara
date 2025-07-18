@@ -6,7 +6,7 @@ use App\Models\Product;
 use App\Models\Gallery;
 use App\Models\Testimonial;
 use App\Models\CustomOrder;
-use App\Models\Order; // ✅ Tambahkan ini
+use App\Models\Order;
 
 class AdminController extends Controller
 {

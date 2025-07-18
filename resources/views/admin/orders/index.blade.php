@@ -28,6 +28,7 @@
                     <th>Ukuran</th>
                     <th>Jumlah</th>
                     <th>Total</th>
+                    <th>Alamat</th>
                     <th>Status</th>
                     <th>Bukti</th>
                     <th>Aksi</th>
@@ -43,6 +44,7 @@
                     <td>{{ $order->ukuran }}</td>
                     <td>{{ $order->jumlah }}</td>
                     <td>Rp{{ number_format($order->total_harga, 0, ',', '.') }}</td>
+                    <td>{{ $order->address }}</td> <!-- ✅ Tambahan -->
                     <td>
                         <span class="badge rounded-pill
                             @switch($order->status)

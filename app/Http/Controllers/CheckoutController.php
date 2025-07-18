@@ -7,8 +7,6 @@ use App\Models\Order;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
@@ -21,6 +19,7 @@ class CheckoutController extends Controller
             'bank_name'       => 'nullable|required_if:payment_method,bank',
             'wallet_type'     => 'nullable|required_if:payment_method,e-wallet',
             'payment_proof'   => 'required|image|max:2048',
+            'address'         => 'required|string|max:255',
         ]);
 
         $user = Auth::user();
@@ -59,6 +58,7 @@ class CheckoutController extends Controller
                 'wallet_type'    => $request->wallet_type,
                 'payment_proof'  => $proofPath,
                 'user_notified'  => false,
+                'address'        => $request->address,
             ]);
 
             // Kurangi stok

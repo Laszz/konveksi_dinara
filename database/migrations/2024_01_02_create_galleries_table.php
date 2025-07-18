@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();           // Supaya bisa kosong kalau cuma upload gambar
-            $table->text('description')->nullable();       // Keterangan opsional
-            $table->string('image');                       // Nama file gambar
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->string('image');
             $table->timestamps();
         });
 

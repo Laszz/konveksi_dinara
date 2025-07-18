@@ -62,6 +62,7 @@
                                         <input type="hidden" name="payment_method" class="payment_method">
                                         <input type="hidden" name="bank_name" class="bank_name">
                                         <input type="hidden" name="wallet_type" class="wallet_type">
+                                        <input type="hidden" name="address" class="address_hidden">
                                         <input type="file" name="payment_proof" class="payment_proof d-none" accept="image/*">
                                         <button type="submit" class="btn btn-sm btn-primary">Bayar</button>
                                     </form>
@@ -79,7 +80,7 @@
             </table>
         </div>
 
-        {{-- Form Inputan Pembayaran Utama untuk Dipakai Bayar Satuan --}}
+        {{-- Informasi Pembayaran & Checkout --}}
         <div class="card p-4 shadow-sm">
             <h5 class="mb-3">Informasi Pembayaran</h5>
 
@@ -130,6 +131,27 @@
                 <label for="payment_proof_main" class="form-label">Upload Bukti Pembayaran</label>
                 <input type="file" id="payment_proof_main" class="form-control" accept="image/*" required>
             </div>
+
+            {{-- Form Checkout Semua --}}
+            <form action="{{ route('cart.checkout') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                @foreach ($items as $item)
+                    <input type="hidden" name="item_ids[]" value="{{ $item->id }}">
+                @endforeach
+
+                <div class="mb-3">
+                    <label for="address" class="form-label fw-bold">Alamat Pengiriman</label>
+                    <textarea name="address" id="address" class="form-control" rows="3" required>{{ old('address') }}</textarea>
+                </div>
+
+                <input type="hidden" name="payment_method" class="payment_method_hidden">
+                <input type="hidden" name="bank_name" class="bank_name_hidden">
+                <input type="hidden" name="wallet_type" class="wallet_type_hidden">
+                <input type="file" name="payment_proof" class="payment_proof_hidden d-none" accept="image/*">
+
+                <button type="submit" class="btn btn-success w-100 mt-2" id="btn-checkout-all">Checkout Semua</button>
+            </form>
         </div>
     @endif
 </div>
@@ -144,12 +166,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const bankInput = document.getElementById('bank_name');
     const walletInput = document.getElementById('wallet_type');
     const proofMain = document.getElementById('payment_proof_main');
+    const addressInput = document.getElementById('address');
 
     methodSelect.addEventListener('change', function () {
         bankField.classList.toggle('d-none', this.value !== 'bank');
         walletField.classList.toggle('d-none', this.value !== 'e-wallet');
     });
 
+    // Checkout satuan
     document.querySelectorAll('.form-bayar-satuan').forEach(form => {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -158,15 +182,17 @@ document.addEventListener("DOMContentLoaded", function () {
             const bank = bankInput.value;
             const wallet = walletInput.value;
             const proofFile = proofMain.files[0];
+            const address = addressInput?.value?.trim();
 
-            if (!method || !proofFile || (method === 'bank' && !bank) || (method === 'e-wallet' && !wallet)) {
-                alert('Lengkapi metode pembayaran dan bukti terlebih dahulu.');
+            if (!method || !proofFile || (method === 'bank' && !bank) || (method === 'e-wallet' && !wallet) || !address) {
+                alert('Lengkapi metode pembayaran, alamat, dan bukti terlebih dahulu.');
                 return;
             }
 
             form.querySelector('.payment_method').value = method;
             form.querySelector('.bank_name').value = bank;
             form.querySelector('.wallet_type').value = wallet;
+            form.querySelector('.address_hidden').value = address;
 
             const proofInput = form.querySelector('.payment_proof');
             const dt = new DataTransfer();
@@ -175,6 +201,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
             form.submit();
         });
+    });
+
+    // Checkout semua
+    const checkoutBtn = document.getElementById('btn-checkout-all');
+    checkoutBtn?.addEventListener('click', function (e) {
+        const method = methodSelect.value;
+        const bank = bankInput.value;
+        const wallet = walletInput.value;
+        const proofFile = proofMain.files[0];
+
+        if (!method || !proofFile || (method === 'bank' && !bank) || (method === 'e-wallet' && !wallet)) {
+            alert('Lengkapi metode pembayaran dan bukti terlebih dahulu.');
+            e.preventDefault();
+            return;
+        }
+
+        document.querySelector('.payment_method_hidden').value = method;
+        document.querySelector('.bank_name_hidden').value = bank;
+        document.querySelector('.wallet_type_hidden').value = wallet;
+
+        const hiddenProof = document.querySelector('.payment_proof_hidden');
+        const dt = new DataTransfer();
+        dt.items.add(proofFile);
+        hiddenProof.files = dt.files;
     });
 });
 </script>

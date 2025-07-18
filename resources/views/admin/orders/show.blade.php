@@ -6,14 +6,15 @@
 <div class="container my-5">
     <h2 class="mb-4">📄 Detail Order #{{ $order->id }}</h2>
 
-    <div class="card mb-4">
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
             <p><strong>Pemesan:</strong> {{ $order->user->name }}</p>
+            <p><strong>Alamat Pengiriman:</strong> {{ $order->address }}</p>
             <p><strong>Produk:</strong> {{ $order->product->name }}</p>
             <p><strong>Warna:</strong> {{ ucfirst($order->warna) }}</p>
             <p><strong>Ukuran:</strong> {{ $order->ukuran }}</p>
             <p><strong>Jumlah:</strong> {{ $order->jumlah }}</p>
-            <p><strong>Total:</strong> Rp {{ number_format($order->total_harga, 0, ',', '.') }}</p>
+            <p><strong>Total:</strong> Rp{{ number_format($order->total_harga, 0, ',', '.') }}</p>
             <p><strong>Metode Pembayaran:</strong> {{ ucfirst($order->payment_method) }}</p>
 
             @if($order->bank_name)
@@ -39,14 +40,14 @@
 
             @if($order->payment_proof)
                 <p><strong>Bukti Transfer:</strong><br>
-                    <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer" style="max-width: 300px;" class="img-fluid rounded shadow">
+                    <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer" class="img-fluid rounded shadow" style="max-width: 300px;">
                 </p>
             @endif
 
             {{-- Form Update Status --}}
             <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST" class="mt-4">
                 @csrf
-                @method('PATCH') {{-- ✅ Ganti ke PATCH --}}
+                @method('PATCH')
                 <div class="mb-3">
                     <label for="status" class="form-label">Update Status</label>
                     <select name="status" id="status" class="form-select" required>
@@ -61,7 +62,7 @@
                 <button type="submit" class="btn btn-success">Update Status</button>
             </form>
 
-            {{-- Tombol Hapus Order --}}
+            {{-- Tombol Hapus --}}
             <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="mt-3" onsubmit="return confirm('Yakin ingin menghapus order ini?')">
                 @csrf
                 @method('DELETE')

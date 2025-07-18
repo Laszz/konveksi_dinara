@@ -71,6 +71,7 @@ class CartController extends Controller
             'bank_name'      => 'nullable|string',
             'wallet_type'    => 'nullable|string',
             'payment_proof'  => 'required|image|max:2048',
+            'address'        => 'required|string',
         ]);
 
         $user = Auth::user();
@@ -110,6 +111,7 @@ class CartController extends Controller
                 'bank_name'      => $validated['payment_method'] === 'bank' ? $validated['bank_name'] : null,
                 'wallet_type'    => $validated['payment_method'] === 'e-wallet' ? $validated['wallet_type'] : null,
                 'payment_proof'  => $paymentProofPath,
+                'address'        => $validated['address'],
             ]);
 
             $item->delete();
@@ -126,6 +128,7 @@ class CartController extends Controller
             'bank_name'      => 'nullable|string',
             'wallet_type'    => 'nullable|string',
             'payment_proof'  => 'required|image|max:2048',
+            'address'        => 'required|string',
         ]);
 
         $user = Auth::user();
@@ -159,6 +162,7 @@ class CartController extends Controller
             'bank_name'      => $validated['payment_method'] === 'bank' ? $validated['bank_name'] : null,
             'wallet_type'    => $validated['payment_method'] === 'e-wallet' ? $validated['wallet_type'] : null,
             'payment_proof'  => $paymentProofPath,
+            'address'        => $validated['address'],
         ]);
 
         $item->delete();
